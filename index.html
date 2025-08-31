@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroTech Solutions</title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            agGreen: "#2E7D32",
+            agBlue: "#0288D1"
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          },
+          animation: {
+            fadeIn: 'fadeIn 1s ease-out forwards',
+            float: 'float 3s ease-in-out infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2909/2909761.png" type="image/png">
+</head>
+
+
+
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition duration-500">
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-agGreen to-agBlue text-white fixed w-full top-0 shadow-md z-50">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <h1 class="text-2xl font-bold animate-float">🌱 AgroTech Solutions</h1>
+      <ul class="hidden md:flex space-x-6">
+        <li><a href="#inicio" class="hover:text-yellow-300 transition">Inicio</a></li>
+        <li><a href="#sprints" class="hover:text-yellow-300 transition">Sprints</a></li>
+        <li><a href="#contacto" class="hover:text-yellow-300 transition">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-agBlue to-agGreen text-white text-center px-6">
+    <div class="md:w-1/2 animate-fadeIn">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">Innovación IoT para la Agricultura</h2>
+      <p class="text-lg mb-6">Monitoreo en tiempo real de humedad, temperatura y pH del suelo. Alertas inteligentes y reportes automáticos.</p>
+      <a href="#sprints" class="mt-6 bg-white text-agGreen px-6 py-2 rounded-lg shadow hover:bg-gray-100 transition">Ver Sprints</a>
+    </div>
+    <div class="md:w-1/2 mt-8 md:mt-0 animate-fadeIn delay-300  ">
+      <img src="img/agricultura-e1551193452226.jpg" alt="Ilustración agrícola" class="w-80 mx-auto rounded-lg shadow-lg"">
+    </div>
+  </section>
+
+<!-- 👉 Aquí metemos el simulador -->
+  <section id="alertas" class="py-12 bg-gray-100">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold text-center text-green-700 mb-8">🌱 Simulador de Alertas</h2>
+
+      <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg mx-auto">
+        <div class="space-y-4">
+          <input id="variable" type="text" placeholder="Nombre de variable (ej. Temperatura)" 
+                 class="w-full p-3 border rounded-lg">
+
+          <input id="umbral" type="number" placeholder="Umbral crítico (ej. 30)" 
+                 class="w-full p-3 border rounded-lg">
+
+          <input id="lectura" type="number" placeholder="Lectura actual (ej. 32)" 
+                 class="w-full p-3 border rounded-lg">
+
+<input id="correo" type="email" placeholder="Correo electrónico" 
+       class="w-full p-3 border rounded-lg">
+
+
+
+          <select id="canal" class="w-full p-3 border rounded-lg">
+            <option value="Correo">Correo electrónico</option>
+            <option value="SMS">SMS</option>
+          </select>
+
+          
+          <button id="btnProbar" 
+                  class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold">
+            Probar alerta
+          </button>
+        </div>
+
+        <!-- Resultado -->
+        <div id="mensaje" class="mt-6 text-center font-medium"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>...</footer>
+
+  <!-- Script de la alerta -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnProbar = document.querySelector("#btnProbar");
+
+      btnProbar.addEventListener("click", () => {
+        const variable = document.querySelector("#variable").value;
+        const umbral = parseFloat(document.querySelector("#umbral").value);
+        const lectura = parseFloat(document.querySelector("#lectura").value);
+        const canal = document.querySelector("#canal").value;
+        const mensaje = document.querySelector("#mensaje");
+
+        if (!variable || isNaN(umbral) || isNaN(lectura)) {
+          mensaje.innerHTML = `<p class="text-red-600">⚠️ Por favor completa todos los campos.</p>`;
+          return;
+        }
+
+        if (lectura > umbral) {
+          mensaje.innerHTML = `
+            <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              <p><strong>⚠️ Alerta de ${variable} fuera de rango</strong></p>
+              <p>Lectura: ${lectura} | Umbral: ${umbral}</p>
+              <p>📩 Se envió una notificación por <strong>${canal}</strong></p>
+            </div>
+          `;
+        } else {
+          mensaje.innerHTML = `
+            <div class="p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+              <p>✅ ${variable} en rango normal.</p>
+              <p>Lectura: ${lectura} | Umbral: ${umbral}</p>
+            </div>
+          `;
+        }
+      });
+    });
+  </script>
+
+
+
+
+    <!-- Técnico -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-2xl">🧰</div>
+        <div>
+          <p class="font-semibold">Técnico</p>
+          <span class="text-xs bg-sky-50 text-sky-700 px-2 py-1 rounded">Rol</span>
+        </div>
+      </div>
+      <ul class="text-gray-700 space-y-2">
+        <li>• Instalar y mantener sensores</li>
+        <li>• Ver métricas en tiempo real</li>
+        <li>• Recibir y atender alertas</li>
+      </ul>
+    </div>
+
+    <!-- Switch de vista -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <h4 class="text-lg font-semibold mb-4 text-emerald-700">Vista del sistema</h4>
+      <div class="flex items-center justify-between mb-4">
+        <span>Rol activo:</span>
+        <button id="btnSwitchRole"
+          class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl shadow transition">
+          Cambiar a Técnico
+        </button>
+      </div>
+
+      <!-- Mock de pantalla según rol -->
+      <div id="panelAdmin" class="rounded-xl border p-4">
+        <p class="font-semibold mb-2">Panel – Administrador</p>
+        <ul class="text-gray-700 space-y-1 text-sm">
+          <li>✅ Usuarios: crear/editar/eliminar</li>
+          <li>✅ Sensores: alta/baja/configuración</li>
+          <li>✅ Reportes e historial</li>
+        </ul>
+      </div>
+
+      <div id="panelTec" class="hidden rounded-xl border p-4">
+        <p class="font-semibold mb-2">Panel – Técnico</p>
+        <ul class="text-gray-700 space-y-1 text-sm">
+          <li>🔧 Listado de sensores</li>
+          <li>📈 Métricas en tiempo real</li>
+          <li>🚨 Alertas asignadas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+  <!-- SPRINTS -->
+  <section id="sprints" class="max-w-7xl mx-auto py-16 px-6">
+    <h3 class="text-3xl font-bold text-center mb-12 text-agGreen dark:text-agBlue animate-fadeIn">📌 Sprints del Proyecto</h3>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-105 transition transform animate-fadeIn">
+        <img src="img/nube.png" alt="Usuario" class="w-12 mb-4">
+        <h4 class="text-xl font-semibold mb-2 text-agBlue">Sprint 1</h4>
+        <p class="text-gray-600 dark:text-gray-300">Registro y autenticación de usuarios. Configuración inicial de la base de datos y login.</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-105 transition transform animate-fadeIn delay-200">
+        <img src="img/sql.2.png" alt="Sensores" class="w-12 mb-4">
+        <h4 class="text-xl font-semibold mb-2 text-agBlue">Sprint 2</h4>
+        <p class="text-gray-600 dark:text-gray-300">Administración de sensores IoT. Registro, edición y eliminación de dispositivos.</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:scale-105 transition transform animate-fadeIn delay-400">
+        <img src="img/correo.png" alt="Dashboard" class="w-12 mb-4">
+        <h4 class="text-xl font-semibold mb-2 text-agBlue">Sprint 3</h4>
+        <p class="text-gray-600 dark:text-gray-300">Visualización de datos en tiempo real mediante dashboards y alertas por correo/SMS.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="bg-agBlue dark:bg-green-950 py-16 px-6 text-white">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h3 class="text-3xl font-bold mb-6">📬 Contáctanos</h3>
+        <p class="mb-4">Déjanos tu mensaje y uno de nuestros asesores agrícolas se comunicará contigo.</p>
+        <img src="img/ilustracion.jpg" alt="Equipo agrícola" class="w-64 mx-auto md:mx-0 animate-float rounded-lg shadow-lg"">
+      </div>
+      <form class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg space-y-4 text-gray-800 dark:text-white">
+        <input type="text" placeholder="Nombre" class="w-full border p-3 rounded-lg">
+        <input type="email" placeholder="Correo electrónico" class="w-full border p-3 rounded-lg">
+        <textarea placeholder="Mensaje" rows="4" class="w-full border p-3 rounded-lg"></textarea>
+        <button type="submit" class="w-full bg-agGreen text-white py-3 rounded-lg hover:bg-green-800 transition">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gradient-to-r from-agGreen to-agBlue text-white py-6 text-center">
+    <p>© 2025 AgroTech Solutions - Todos los derechos reservados</p>
+  </footer>
+
+
+
+</body>
+</html>
